@@ -1,5 +1,6 @@
 import fs from 'fs'
 import express from 'express'
+import cors from 'cors';
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import swaggerUi from 'swagger-ui-express'
@@ -11,8 +12,18 @@ import v2 from './api/routes/v2.js'
 
 dotenv.config()
 
+
+
+
+
+
+
+
+
+
 let swaggerDocument = JSON.parse(fs.readFileSync('./swagger.json', 'utf8'))
 const app = express()
+app.use(cors());
 const port = process.env.PORT || 8080
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
