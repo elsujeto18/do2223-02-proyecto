@@ -1,21 +1,19 @@
-FROM node:18-alpine as base
+FROM node:16.13.0-alpine3.14
 
+# Create app directory
 WORKDIR /src
-COPY package*.json /
-EXPOSE 3000 9229
 
-ENV WAIT_VERSION 2.7.2
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
-RUN chmod +x /wait
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-FROM base as production
-ENV NODE_ENV=production
-RUN npm ci
-COPY ./ ./
-CMD ["node", "bin/www"]
+RUN npm install
+# If you are building your code for production
+# RUN npm install --only=production
 
-FROM base as dev
-ENV NODE_ENV=development
-COPY ./ ./
-RUN npm install -g nodemon && npm install
-CMD ["nodemon", "bin/www"]
+# Bundle app source
+COPY . .
+
+EXPOSE 8080
+CMD [ "npm", "start" ]

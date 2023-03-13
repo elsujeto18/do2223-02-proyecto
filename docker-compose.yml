@@ -1,48 +1,31 @@
-version: '3.9'
+version: '3'
+
+
 services:
-  mongodb:
-    image: zcube/bitnami-compat-mongodb:latest
+  acme: # name of service
+    container_name: acme-container 
+    build: . # build from Dockerfile in current directory
     ports:
-      - '${MONGO_API_PORT:-27017}:27017'
-    volumes:
-      - 'mongodb_data:/bitnami/mongodb'
+      - "${NODE_PORT:-8080}:8080"
+    restart: on-failure # restart if service fails
+    depends_on:
+      - mongodb # wait for mongodb to be ready
+    
     environment:
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MONGODB_USERNAME=myUser
-      - MONGODB_PASSWORD=myUserPassword
-      - MONGODB_DATABASE=ACME-Explorer
-    networks:
-      - miss2
-  web:
-      build:
-        context: ./
-        target: ${TARGET:-dev}
-      volumes:
-        - .:/src
-        - node_modules:/src/node_modules
-      command: > 
-        sh -c "pwd && npm install && /wait && npm run docker_debug"
-      ports:
-        - "${NODE_PORT:-8080}:${NODE_PORT:-8080}"
-        
-      depends_on:
-        - mongodb
-      environment:
-        NODE_ENV: development
-        DEBUG: MISS2-Backend:*
-        WAIT_HOSTS: mongodb:27017
-        WAIT_HOSTS_TIMEOUT: 300
-        WAIT_SLEEP_INTERVAL: 3
-        WAIT_HOST_CONNECT_TIMEOUT: 5
-      env_file:
-        - .env.docker
-      networks:
-        - miss2
-networks:
-  miss2:
-    driver: bridge
+      NODE_ENV: ${NODE_ENV:-development}
+      
+  mongodb: # name of service
+    image: "mongo" # pull from Docker Hub
+    command: --logpath /var/log/mongodb/db.log
+    ports:
+      - "${MONGO_PORT:-27015}:27017"
+    volumes:
+      - "datavol:/data/db" # mount local directory to container directory
+      - "logging-db-acme:/var/log/mongodb" # mount local directory to container directory
+      
 volumes:
-  mongodb_data:
-    driver: local
-  node_modules:
+  logging-acme:
+    external: true #esto quiere decir que docker compose no lo va a crear, sino que lo va a buscar en el host
+  datavol:
+  logging-db-acme:
+    external: true
