@@ -16,7 +16,10 @@ dotenv.config()
 
 let swaggerDocument = JSON.parse(fs.readFileSync('./swagger.json', 'utf8'))
 const app = express()
-app.use(cors());
+
+
+
+
 const port = process.env.PORT || 8080
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -25,6 +28,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(versionedRoutes(['v1', 'v2']))
 app.use('/v1', v1)
 app.use('/v2', v2)
+
+app.use(cors());
+
 
 try{
   await initMongoDBConnection()
