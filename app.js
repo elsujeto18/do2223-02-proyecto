@@ -14,13 +14,6 @@ dotenv.config()
 
 
 
-
-
-
-
-
-
-
 let swaggerDocument = JSON.parse(fs.readFileSync('./swagger.json', 'utf8'))
 const app = express()
 app.use(cors());
