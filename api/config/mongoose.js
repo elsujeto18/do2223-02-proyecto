@@ -12,7 +12,7 @@ const mongoDBHostname = process.env.DATABASE_HOST || 'localhost'
 const mongoDBPort = process.env.DATABASE_PORT || '27017'
 const mongoDBName = process.env.DATABASE_NAME || 'ACME-Explorer'
 
-const mongoDBURI = process.env.DATABASE_ATLAS || 'mongodb://' + mongoDBCredentials + mongoDBHostname + ':' + mongoDBPort + '/' + mongoDBName
+const mongoDBURI = 'mongodb+srv://calat:MTIF!DkYYf41@cluster0.i1yihyt.mongodb.net/ACME-Explorer' || 'mongodb://' + mongoDBCredentials + mongoDBHostname + ':' + mongoDBPort + '/' + mongoDBName
 const mongoDBOptions = {
     connectTimeoutMS: 10000,
     socketTimeoutMS: 45000,
